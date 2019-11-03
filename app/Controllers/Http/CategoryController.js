@@ -7,11 +7,26 @@ const Category = use('App/Models/Category')
 class CategoryController {
 
     async index({request}){
-        return await Category.all()
+        let page = request.input('page');
+        if(!page){
+            page = 1;
+        }
+        
+        return await Category.query().orderBy('id', 'desc').paginate(page,2);
     }
 
     async store({request}){
         const data = request.only(['name']);
+
+        const rules = {
+            name: 'required|unique:categories,name'
+        }
+        
+        const validation = await validate(request.all(), rules);
+        
+        if(validation.fails()){
+            return {message: validation.messages()};
+        }
 
         const category = await Category.create(data);
 
@@ -19,14 +34,32 @@ class CategoryController {
     }
 
     
-    async show({params, request}){
-        return {};
+    async show({params}){
+        const category  = await Category.find(params.id)
+        if(!category){
+            return {message: 'Essa categoria não existe :('}
+        }
+        return category;
     }
 
 
     async update({params, request}){
         const data = request.only(['name', 'category_id']);
         const category  = await Category.find(params.id)
+
+        const rules = {
+            name: 'required|unique:categories,name'
+        }
+        
+        const validation = await validate(request.all(), rules);
+        
+        if(validation.fails()){
+            return {message: validation.messages()};
+        }
+
+        if(!category){
+            return {message: 'Essa categoria não existe :('}
+        }
 
         category.merge(data)
          
@@ -65,7 +98,11 @@ class CategoryController {
     async destroy({params}){
         
         const category  = await Category.find(params.id)
-
+        
+        if(!category){
+            return {message: 'Essa categoria não existe :('}
+        }
+        
         category.delete()
 
         return  {message: 'Deletado com sucesso'};
