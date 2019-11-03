@@ -21,3 +21,5 @@ Route.post('login', 'AuthController.login')
 //Route.post('createuser', 'AuthController.create')
 
 Route.resource('category', 'CategoryController').apiOnly()
+
+Route.post('addSubCategory', 'CategoryController.addSubCategory')

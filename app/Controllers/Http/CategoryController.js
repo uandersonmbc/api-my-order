@@ -1,5 +1,7 @@
 'use strict'
 
+const { validate } = use('Validator')
+
 const Category = use('App/Models/Category')
 
 class CategoryController {
@@ -17,7 +19,7 @@ class CategoryController {
     }
 
     
-    async show({request}){
+    async show({params, request}){
         return {};
     }
 
@@ -36,20 +38,37 @@ class CategoryController {
 
     async addSubCategory({request}){
         const data = request.only(['name', 'category_id']);
+        
+        const rules = {
+            name: 'required|unique:categories,name',
+            category_id: 'required'
+        }
+        
+        const validation = await validate(request.all(), rules);
+        
+        if(validation.fails()){
+            return {message: validation.messages()};
+        }
+        
+        const categoryExists  = await Category.find(data.category_id)
+
+        if(!categoryExists){
+            return {message: 'A categoria que esta subcategoria procura não existe :('}
+        }
 
         const category = await Category.create(data);
-
+        
         return category;
         
     }
 
-    async delete({params}){
+    async destroy({params}){
         
         const category  = await Category.find(params.id)
 
         category.delete()
 
-        return  {message: 'Successfully deleted'};
+        return  {message: 'Deletado com sucesso'};
     }
 }
 
