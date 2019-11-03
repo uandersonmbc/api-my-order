@@ -43,8 +43,13 @@ class CategoryController {
         
     }
 
-    async delete({request}){
-        return {};
+    async delete({params}){
+        
+        const category  = await Category.find(params.id)
+
+        category.delete()
+
+        return  {message: 'Successfully deleted'};
     }
 }
 
