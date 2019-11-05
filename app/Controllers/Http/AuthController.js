@@ -1,35 +1,30 @@
 'use strict'
 
 const User = use("App/Models/User");
+const DataProcessingService = use('App/Services/DataProcessingService');
 
 class AuthController {
-    
-    async login ({ request, auth, response }) {
+
+    async login({ request, auth, response }) {
         try {
             // validate the user credentials and generate a JWT token
             const token = await auth.attempt(
                 request.input('email'),
                 request.input('password')
             )
-    
-            return response.json({
-                status: 'success',
-                data: token
-            })
+
+            return DataProcessingService.assemblyData(response, 'LO01', token);
         } catch (error) {
-            response.status(400).json({
-                status: 'error',
-                message: 'Invalid email/password'
-            })
+            return DataProcessingService.assemblyData(response, 'LO02');
         }
     }
 
-    async create({request}){
+    async register({ request, response }) {
         const data = request.only(['username', 'email', 'password', 'name']);
 
         const user = await User.create(data);
 
-        return user;
+        return DataProcessingService.assemblyData(response, 'US01', user);
 
     }
 }
