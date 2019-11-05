@@ -30,7 +30,7 @@ class DataProcessingService {
             US01: { message: ' cadastrado com sucesso', http_code: 201 },
 
             CA01: { message: 'Categoria cadastrada com sucesso :)', http_code: 201 },
-            CA02: { message: 'Aconteceu um erro na hora de cadastrar a categoria:(', http_code: 201 },
+            CA02: { message: 'Aconteceu um erro na hora de cadastrar a categoria :(', http_code: 201 },
             CA03: { message: 'Categoria atualizada com sucesso :)', http_code: 201 },
             CA04: { message: 'Acontecu algum problema na hora de atualizar a categoria :(', http_code: 201 },
             CA05: { message: 'Categoria não existe :(', http_code: 404 },
