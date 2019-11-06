@@ -24,3 +24,5 @@ Route.post('register', 'AuthController.register')
 Route.resource('category', 'CategoryController').apiOnly()
 
 Route.post('addSubCategory', 'CategoryController.addSubCategory')
+
+Route.resource('product', 'ProductController').apiOnly()

@@ -34,6 +34,12 @@ class DataProcessingService {
             CA03: { message: 'Categoria atualizada com sucesso :)', http_code: 201 },
             CA04: { message: 'Acontecu algum problema na hora de atualizar a categoria :(', http_code: 201 },
             CA05: { message: 'Categoria não existe :(', http_code: 404 },
+            
+            PR01: { message: 'Produto cadastrada com sucesso :)', http_code: 201 },
+            PR02: { message: 'Aconteceu um erro na hora de cadastrar seu produto :(', http_code: 201 },
+            PR03: { message: 'Produto atualizada com sucesso :)', http_code: 201 },
+            PR04: { message: 'Acontecu algum problema na hora de atualizar seu produto :(', http_code: 201 },
+             
         }
         return teste[code];
     }
