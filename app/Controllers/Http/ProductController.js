@@ -1,5 +1,7 @@
 'use strict'
 
+const { validate } = use('Validator')
+
 const Product = use('App/Models/Product')
 
 const DataProcessingService = use('App/Services/DataProcessingService');
@@ -35,8 +37,12 @@ class ProductController {
         return DataProcessingService.assemblyData(response, 'PR01', product);
     }
 
-    async show({}){
-
+    async show({params}){
+        const product = await Product.find(params.id)
+        if (!product) {
+            return { message: 'Este produto não existe :(' }
+        }
+        return product;
     }
 
     async update({}){
