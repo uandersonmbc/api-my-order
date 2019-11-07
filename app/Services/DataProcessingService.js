@@ -39,7 +39,9 @@ class DataProcessingService {
             PR02: { message: 'Aconteceu um erro na hora de cadastrar seu produto :(', http_code: 201 },
             PR03: { message: 'Produto atualizada com sucesso :)', http_code: 201 },
             PR04: { message: 'Aconteceu algum problema na hora de atualizar seu produto :(', http_code: 201 },
-             
+            PR05: { message: 'Este produto não existe :(', http_code: 404} ,
+            PR06: { message: 'Produto deletado com sucesso :D', http_code: 201},
+            
         }
         return teste[code];
     }

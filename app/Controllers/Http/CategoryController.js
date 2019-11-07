@@ -14,7 +14,7 @@ class CategoryController {
             page = 1;
         }
 
-        return await Category.query().orderBy('id', 'desc').paginate(page, 2);
+        return await Category.query().orderBy('id', 'desc').paginate(page);
     }
 
     async store({ request, response }) {

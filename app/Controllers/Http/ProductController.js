@@ -14,7 +14,7 @@ class ProductController {
             page = 1;
         }
 
-        return await Product.query().orderBy('id', 'desc').paginate(page, 2);
+        return await Product.query().orderBy('id', 'desc').paginate(page);
     }
 
     async store({request, response}){
@@ -67,12 +67,20 @@ class ProductController {
 
         await product.save()
 
-
         return product;
     }
 
-    async destroy({}){
+    async destroy({ params, response }) {
 
+        const product = await Product.find(params.id)
+
+        if (!product) {
+            return DataProcessingService.assemblyData(response, 'PR05', product);
+        }
+
+        product.delete()
+
+        return DataProcessingService.assemblyData(response, 'PR06', product);
     }
 }
 
