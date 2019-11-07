@@ -37,11 +37,18 @@ class DataProcessingService {
             
             PR01: { message: 'Produto cadastrada com sucesso :)', http_code: 201 },
             PR02: { message: 'Aconteceu um erro na hora de cadastrar seu produto :(', http_code: 201 },
-            PR03: { message: 'Produto atualizada com sucesso :)', http_code: 201 },
+            PR03: { message: 'Produto atualizado com sucesso :)', http_code: 201 },
             PR04: { message: 'Aconteceu algum problema na hora de atualizar seu produto :(', http_code: 201 },
             PR05: { message: 'Este produto não existe :(', http_code: 404} ,
             PR06: { message: 'Produto deletado com sucesso :D', http_code: 201},
             
+            IN01: { message: 'Ingrediente cadastrado com sucesso :)', http_code: 201 },
+            IN02: { message: 'Aconteceu um erro na hora de cadastrar seu ingrediente :(', http_code: 201 },
+            IN03: { message: 'Ingrediente atualizado com sucesso :)', http_code: 201 },
+            IN04: { message: 'Aconteceu algum problema na hora de atualizar seu ingrediente :(', http_code: 201 },
+            IN05: { message: 'Este ingrediente não existe :(', http_code: 404} ,
+            IN06: { message: 'Ingrediente deletado com sucesso :D', http_code: 201},
+
         }
         return teste[code];
     }
