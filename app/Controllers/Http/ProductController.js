@@ -45,8 +45,30 @@ class ProductController {
         return product;
     }
 
-    async update({}){
+    async update({params, request}){
+        const data = request.only(['name', 'price', 'category_id']);
+        const product = await Product.find(params.id)
 
+        const rules = {
+            name: 'required|unique:categories,name'
+        }
+
+        const validation = await validate(request.all(), rules);
+
+        if (validation.fails()) {
+            return { message: validation.messages() };
+        }
+
+        if (!product) {
+            return DataProcessingService.assemblyData(response, 'PR04', product);
+        }
+
+        product.merge(data)
+
+        await product.save()
+
+
+        return product;
     }
 
     async destroy({}){
