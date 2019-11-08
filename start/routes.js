@@ -16,6 +16,8 @@
 /** @type {typeof import('@adonisjs/framework/src/Route/Manager')} */
 const Route = use('Route')
 
+Route.get('user', 'AuthController.user')
+
 Route.post('login', 'AuthController.login')
 Route.post('register', 'AuthController.register')
 
@@ -28,3 +30,8 @@ Route.post('addSubCategory', 'CategoryController.addSubCategory')
 Route.resource('product', 'ProductController').apiOnly()
 
 Route.resource('ingredient', 'IngredientController').apiOnly()
+
+Route.post('createorder', 'OrderController.store')
+Route.post('changestatus/:id', 'OrderController.changeStatus')
+Route.get('order', 'OrderController.index')
+Route.get('showorder/:id', 'OrderController.show')

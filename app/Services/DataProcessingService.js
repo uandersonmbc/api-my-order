@@ -49,6 +49,13 @@ class DataProcessingService {
             IN05: { message: 'Este ingrediente não existe :(', http_code: 404} ,
             IN06: { message: 'Ingrediente deletado com sucesso :D', http_code: 201},
 
+            OR01: { message: 'Pedido cadastrado com sucesso :)', http_code: 201 },
+            OR02: { message: 'Aconteceu um erro na hora de cadastrar seu pedido :(', http_code: 201 },
+            OR03: { message: 'Pedido atualizado com sucesso :)', http_code: 201 },
+            OR04: { message: 'Aconteceu algum problema na hora de atualizar seu pedido :(', http_code: 201 },
+            OR05: { message: 'Este pedido não existe :(', http_code: 404} ,
+            OR06: { message: 'Pedido deletado com sucesso :D', http_code: 201},
+            
         }
         return teste[code];
     }
