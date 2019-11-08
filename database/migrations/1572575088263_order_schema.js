@@ -9,7 +9,7 @@ class OrderSchema extends Schema {
       table.increments()
       table.integer('user_id').notNullable()
       table.foreign('user_id').references('id').on('users').onDelete('cascade')
-      table.boolean('status').notNullable()
+      table.integer('status').defaultTo(0)
       table.timestamps()
     })
   }

@@ -5,6 +5,15 @@ const DataProcessingService = use('App/Services/DataProcessingService');
 
 class AuthController {
 
+    async user({auth, response}){
+        try {
+            return await auth.getUser();
+            
+        } catch (ex) {
+            response.send("Usuário não autenticado :/" + ex);
+        }
+    }
+
     async login({ request, auth, response }) {
         try {
             // validate the user credentials and generate a JWT token
