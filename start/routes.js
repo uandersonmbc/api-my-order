@@ -45,6 +45,9 @@ Route.post('register', 'AuthController.register')
  */
 
 Route.group(() => {
+}).middleware(['auth', 'is:administrator']);
+
+Route.group(() => {
     Route.get('user', 'AuthController.user')
 
     Route.resource('category', 'CategoryController').apiOnly()
@@ -60,4 +63,15 @@ Route.group(() => {
     Route.get('order', 'OrderController.index')
     Route.get('showorder/:id', 'OrderController.show')
 
-}).middleware(['auth', 'is:(administrator)']);
+}).middleware(['auth', 'is:manager']);
+
+Route.group(() => {
+    Route.post('changestatus/:id', 'OrderController.changeStatus')
+    Route.get('order', 'OrderController.index')
+    Route.get('showorder/:id', 'OrderController.show')
+
+}).middleware(['auth', 'is:waiter']);
+
+
+Route.group(() => {
+}).middleware(['auth', 'is:customer']);

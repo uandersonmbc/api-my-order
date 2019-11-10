@@ -12,32 +12,42 @@
 
 /** @type {import('@adonisjs/lucid/src/Factory')} */
 const Factory = use('Factory')
+const Role = use("App/Models/Role");
 
 class RoleSeeder {
     async run() {
-        const roleAdmin = new Role()
-        roleAdmin.name = 'Administrador'
-        roleAdmin.slug = 'administrator'
-        roleAdmin.description = 'Administrador do estabelecimento'
-        await roleAdmin.save()
 
-        const roleManager = new Role()
-        roleManager.name = 'Gerente'
-        roleManager.slug = 'manager'
-        roleManager.description = 'Gerencia os pedidos e o caixa'
-        await roleManager.save()
+        var obj = {
+            name: 'Administrador',
+            slug: 'administrator',
+            description: 'Administrador do estabelecimento'
+        }
+        await Role.create(obj);
 
-        const roleWaiter = new Role()
-        roleWaiter.name = 'Gerente'
-        roleWaiter.slug = 'Waiter'
-        roleWaiter.description = 'Gerencia os pedidos e o caixa'
-        await roleWaiter.save()
+        obj = {
+            name: 'Gerente',
+            slug: 'manager',
+            description: 'Gerencia os pedidos e o caixa'
+        }
 
-        const roleCustomer = new Role()
-        roleCustomer.name = 'Gerente'
-        roleCustomer.slug = 'customer'
-        roleCustomer.description = 'Gerencia os pedidos e o caixa'
-        await roleCustomer.save()
+        await Role.create(obj);
+
+        obj = {
+            name: 'Garçom',
+            slug: 'waiter',
+            description: 'Faz a entrega dos pedidos'
+        }
+
+        await Role.create(obj);
+
+        obj = {
+            name: 'Cliente',
+            slug: 'customer',
+            description: 'Pode usar a aplicação'
+        }
+
+        await Role.create(obj);
+
     }
 }
 

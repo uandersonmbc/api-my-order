@@ -5,10 +5,10 @@ const DataProcessingService = use('App/Services/DataProcessingService');
 
 class AuthController {
 
-    async user({auth, response}){
+    async user({ auth, response }) {
         try {
             return await auth.getUser();
-            
+
         } catch (ex) {
             response.send("Usuário não autenticado :/" + ex);
         }
