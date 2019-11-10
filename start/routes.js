@@ -16,22 +16,48 @@
 /** @type {typeof import('@adonisjs/framework/src/Route/Manager')} */
 const Route = use('Route')
 
-Route.get('user', 'AuthController.user')
 
 Route.post('login', 'AuthController.login')
 Route.post('register', 'AuthController.register')
 
-//Route.post('createuser', 'AuthController.create')
+/*
+ |--------------------------------------------------------------------------
+ | Routes Group
+ |--------------------------------------------------------------------------
+ | Criei um grupo de rotas privadas, essa rotas privadas 
+ | só pode ser acessadas quando o usuário estiver logado.
+ | 
+ |--------------------------------------------------------------------------
+ | Middlewares
+ |--------------------------------------------------------------------------
+ | middleware(['auth']) serve para poder verificar se usuário está logado na plataforma
+ | a verificação é feita atraves do token no header da requisição
+ | ele verifia se o token é vádido, se o token não expirou e se ele não estar na black-list.
+ | 
+ | E o que é a black-lis, a black-list é quando o usuário está logado
+ | e o administrador quer deslogar esse usuário por algum motivo, ai ele pega o token desse usuário
+ | e joga o token na black-list, sendo assim o middleware vai verificar e ver se o token do usuário
+ | não estar nessa lista.
+ |--------------------------------------------------------------------------
+ | 
+ | Mas explicado do que isso só deus na causa.
+ |
+ */
 
-Route.resource('category', 'CategoryController').apiOnly()
+Route.group(() => {
+    Route.get('user', 'AuthController.user')
 
-Route.post('addSubCategory', 'CategoryController.addSubCategory')
+    Route.resource('category', 'CategoryController').apiOnly()
 
-Route.resource('product', 'ProductController').apiOnly()
+    Route.post('addSubCategory', 'CategoryController.addSubCategory')
 
-Route.resource('ingredient', 'IngredientController').apiOnly()
+    Route.resource('product', 'ProductController').apiOnly()
 
-Route.post('createorder', 'OrderController.store')
-Route.post('changestatus/:id', 'OrderController.changeStatus')
-Route.get('order', 'OrderController.index')
-Route.get('showorder/:id', 'OrderController.show')
+    Route.resource('ingredient', 'IngredientController').apiOnly()
+
+    Route.post('createorder', 'OrderController.store')
+    Route.post('changestatus/:id', 'OrderController.changeStatus')
+    Route.get('order', 'OrderController.index')
+    Route.get('showorder/:id', 'OrderController.show')
+
+}).middleware(['auth', 'is:(administrator)']);
