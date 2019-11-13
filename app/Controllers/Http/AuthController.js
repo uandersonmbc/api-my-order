@@ -7,7 +7,9 @@ class AuthController {
 
     async user({ auth, response }) {
         try {
-            return await auth.getUser();
+            const user = await auth.getUser();
+            const role = await user.getRoles();
+            return response.json({ user, role });
 
         } catch (ex) {
             response.send("Usuário não autenticado :/" + ex);
@@ -20,9 +22,9 @@ class AuthController {
             const token = await auth.attempt(
                 request.input('email'),
                 request.input('password')
-            )
+            );
 
-            return DataProcessingService.assemblyData(response, 'LO01', token);
+            return response.json(token);
         } catch (error) {
             return DataProcessingService.assemblyData(response, 'LO02');
         }
