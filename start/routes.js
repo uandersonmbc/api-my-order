@@ -44,11 +44,12 @@ Route.post('register', 'AuthController.register')
  |
  */
 
+Route.get('user', 'AuthController.user').middleware(['auth']);
+
 Route.group(() => {
 }).middleware(['auth', 'is:administrator']);
 
 Route.group(() => {
-    Route.get('user', 'AuthController.user')
 
     Route.resource('category', 'CategoryController').apiOnly()
 

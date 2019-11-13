@@ -1,7 +1,8 @@
 'use strict'
 
+const { validate } = use('Validator')
+
 const User = use("App/Models/User");
-const DataProcessingService = use('App/Services/DataProcessingService');
 
 class AuthController {
 
@@ -26,16 +27,35 @@ class AuthController {
 
             return response.json(token);
         } catch (error) {
-            return DataProcessingService.assemblyData(response, 'LO02');
+            return response.status(401).json({ message: 'Email ou senha incorretos :/' });
         }
     }
 
-    async register({ request, response }) {
+    async register({ request, auth, response }) {
         const data = request.only(['username', 'email', 'password', 'name']);
 
-        const user = await User.create(data);
+        const rules = {
+            name: 'required',
+            email: 'required|unique:users,email',
+            password: 'required|min:8',
+            username: 'required|unique:users,username'
+        }
 
-        return DataProcessingService.assemblyData(response, 'US01', user);
+        const validation = await validate(request.all(), rules);
+
+        if (validation.fails()) {
+            return response.status(400).json(validation.messages());
+        }
+
+        try {
+            const user = await User.create(data);
+            await user.roles().attach([4]);
+            const token = await auth.generate(user);
+            return response.json(token);
+
+        } catch (error) {
+            return response.status(400).json({ message: '' });
+        }
 
     }
 }

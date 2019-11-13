@@ -26,7 +26,7 @@ class UserSeeder {
                 password: '123456'
             }
             var user = await User.create(data);
-            user.roles().attach([i]);
+            await user.roles().attach([i]);
 
             var data = {
                 name: 'Javel Queiroz',
@@ -35,7 +35,7 @@ class UserSeeder {
                 password: '123456'
             }
             var user = await User.create(data);
-            user.roles().attach([i]);
+            await user.roles().attach([i]);
         }
 
     }
