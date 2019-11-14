@@ -18,7 +18,7 @@ class ProductController {
     }
 
     async store({request, response}){
-        const data = request.only(['name', 'price', 'category_id']);
+        const data = request.only(['name', 'price', 'category_id', 'ingredient_id']);
 
         const rules = {
             name: 'required',
@@ -33,6 +33,8 @@ class ProductController {
         }
 
         const product = await Product.create(data);
+
+        product.ingredients().sync(data.ingredient_id)
 
         return DataProcessingService.assemblyData(response, 'PR01', product);
     }
