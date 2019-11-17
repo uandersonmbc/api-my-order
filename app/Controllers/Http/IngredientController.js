@@ -4,10 +4,8 @@ const { validate } = use('Validator')
 
 const Ingredient = use('App/Models/Ingredient')
 
-const DataProcessingService = use('App/Services/DataProcessingService');
-
 class IngredientController {
-    async index({request}){
+    async index({ request }) {
         let page = request.input('page');
         if (!page) {
             page = 1;
@@ -16,7 +14,7 @@ class IngredientController {
         return await Ingredient.query().orderBy('id', 'desc').paginate(page);
     }
 
-    async store({request, response}){
+    async store({ request, response }) {
         const data = request.only(['name']);
 
         const rules = {
@@ -26,23 +24,29 @@ class IngredientController {
         const validation = await validate(request.all(), rules);
 
         if (validation.fails()) {
-            return DataProcessingService.assemblyData(response, 'IN02', validation.messages());
+            return response.status(400).json(validation.messages());
         }
 
-        const ingredient = await Ingredient.create(data);
+        try {
 
-        return DataProcessingService.assemblyData(response, 'IN01', ingredient);
+            const ingredient = await Ingredient.create(data);
+
+            return ingredient;
+
+        } catch (error) {
+            return response.status(404).json({ message: 'Erro ao cadastrar ingrediente' });
+        }
     }
 
-    async show({params, response}){
+    async show({ params, response }) {
         const ingredient = await Ingredient.find(params.id)
         if (!ingredient) {
-            return DataProcessingService.assemblyData(response, 'IN05', ingredient);
+            return response.status(404).json({ message: 'Ingrediente não encontrado' });
         }
         return ingredient;
     }
 
-    async update({params, request}){
+    async update({ params, request, response }) {
         const data = request.only(['name']);
         const ingredient = await Ingredient.find(params.id)
 
@@ -53,18 +57,23 @@ class IngredientController {
         const validation = await validate(request.all(), rules);
 
         if (validation.fails()) {
-            return { message: validation.messages() };
+            return response.status(404).json(validation.messages());
         }
 
         if (!ingredient) {
-            return DataProcessingService.assemblyData(response, 'IN04', ingredient);
+            return response.status(404).json({ message: 'Ingrediente não encontrado' });
         }
 
-        ingredient.merge(data)
+        try {
+            ingredient.merge(data)
 
-        await ingredient.save()
+            await ingredient.save()
 
-        return ingredient;
+            return ingredient;
+        } catch (error) {
+            return response.status(404).json({ message: 'Erro ao atulalizar ingrediente' });
+        }
+
     }
 
     async destroy({ params, response }) {
@@ -72,12 +81,12 @@ class IngredientController {
         const ingredient = await Ingredient.find(params.id)
 
         if (!ingredient) {
-            return DataProcessingService.assemblyData(response, 'IN05', ingredient);
+            return response.status(404).json({ message: 'Ingrediente não encontrado' });
         }
 
         ingredient.delete()
 
-        return DataProcessingService.assemblyData(response, 'IN06', ingredient);
+        return response.json(ingredient);
     }
 }
 
