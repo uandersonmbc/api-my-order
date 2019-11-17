@@ -4,8 +4,6 @@ const { validate } = use('Validator')
 
 const Category = use('App/Models/Category')
 
-const DataProcessingService = use('App/Services/DataProcessingService');
-
 class CategoryController {
 
     async index({ request }) {
@@ -14,7 +12,7 @@ class CategoryController {
             page = 1;
         }
 
-        return await Category.query().orderBy('id', 'desc').paginate(page);
+        return await Category.query().whereNull('category_id').orderBy('id', 'desc').paginate(page);
     }
 
     async store({ request, response }) {
@@ -27,25 +25,28 @@ class CategoryController {
         const validation = await validate(request.all(), rules);
 
         if (validation.fails()) {
-            return DataProcessingService.assemblyData(response, 'CA02', validation.messages());
+            return response.status(400).json(validation.messages());
         }
 
-        const category = await Category.create(data);
-
-        return DataProcessingService.assemblyData(response, 'CA01', category);
+        try {
+            const category = await Category.create(data);
+            return response.status(201).json(category);
+        } catch (error) {
+            return response.status(400).json({ message: 'Erro ao cadastrar uma nova categoria' });
+        }
     }
 
 
-    async show({ params }) {
+    async show({ params, response }) {
         const category = await Category.find(params.id)
         if (!category) {
-            return { message: 'Essa categoria não existe :(' }
+            return response.status(400).json({ message: 'Essa categoria não existe :(' });
         }
         return category;
     }
 
 
-    async update({ params, request }) {
+    async update({ params, request, response }) {
         const data = request.only(['name', 'category_id']);
         const category = await Category.find(params.id)
 
@@ -56,23 +57,25 @@ class CategoryController {
         const validation = await validate(request.all(), rules);
 
         if (validation.fails()) {
-            return { message: validation.messages() };
+            return response.status(400).json({ message: validation.messages() });
         }
 
         if (!category) {
-            return { message: 'Essa categoria não existe :(' }
+            return response.status(404).json({ message: 'Essa categoria não existe :(' });
         }
 
-        category.merge(data)
+        try {
+            category.merge(data)
+            await category.save()
+            return category;
+        } catch (error) {
+            return response.status(400).json({ message: 'Não foi possível atualizar os dados' });
+        }
 
-        await category.save()
-
-
-        return category;
     }
 
 
-    async addSubCategory({ request }) {
+    async addSubCategory({ request, response }) {
         const data = request.only(['name', 'category_id']);
 
         const rules = {
@@ -83,33 +86,41 @@ class CategoryController {
         const validation = await validate(request.all(), rules);
 
         if (validation.fails()) {
-            return { message: validation.messages() };
+            return response.status(400).json({ message: validation.messages() });
         }
 
         const categoryExists = await Category.find(data.category_id)
 
         if (!categoryExists) {
-            return { message: 'A categoria que esta subcategoria procura não existe :(' }
+            return response.status(400).json({ message: 'A categoria que esta subcategoria procura não existe :(' })
         }
 
-        const category = await Category.create(data);
+        try {
+            const category = await Category.create(data);
+            return category;
+        } catch (error) {
+            return response.status(400).json({ message: 'Não foi possível adicionar uma subcategoria.' });
+        }
 
-        return category;
 
     }
 
-    async destroy({ params }) {
+    async destroy({ params, response }) {
 
         const category = await Category.find(params.id)
 
         if (!category) {
-            return { message: 'Essa categoria não existe :(' }
+            return response.status(400).json({ message: 'Essa categoria não existe :(' });
         }
 
-        category.delete()
+        try {
+            await category.delete();
+            return response.json({ message: 'Deletado com sucesso' });
+        } catch (error) {
+            return response.status().json({ message: 'Acontecue um erro na hora de deleta a categoria' });
+        }
 
-        return { message: 'Deletado com sucesso' };
     }
 }
 
-module.exports = CategoryController
+module.exports = CategoryController;
