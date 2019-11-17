@@ -26,8 +26,8 @@ class OrderController {
     async store({auth, response}){
         const user = await auth.getUser();
         const userOrder = user.order().fetch();
-        if(!userOrder){
-            return response.send('Nenhum pedido encontrado.');
+        if(userOrder){
+            return response.status(401).json({message: 'Você já tem um pedido.'});
         }
         const data = {user_id: user.id};
         const order = await Order.create(data);

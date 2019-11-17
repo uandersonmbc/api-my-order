@@ -59,7 +59,6 @@ Route.group(() => {
 
     Route.resource('ingredient', 'IngredientController').apiOnly()
 
-    Route.post('createorder', 'OrderController.store')
     Route.post('changestatus/:id', 'OrderController.changeStatus')
     Route.get('order', 'OrderController.index')
     Route.get('showorder/:id', 'OrderController.show')
@@ -74,5 +73,9 @@ Route.group(() => {
 }).middleware(['auth', 'is:waiter']);
 
 
-Route.group(() => {
+Route.group(() => { 
+
+    Route.post('createorder', 'OrderController.store')
+    Route.resource('product', 'ProductController').apiOnly()
+
 }).middleware(['auth', 'is:customer']);
