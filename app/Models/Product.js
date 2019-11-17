@@ -4,8 +4,8 @@
 const Model = use('Model')
 
 class Product extends Model {
-    ingredients(){
-        return this.belongsToMany('App/Models/Ingredients')
+    ingredients() {
+        return this.belongsToMany('App/Models/Ingredient').pivotTable('product_ingredients')
     }
 }
 

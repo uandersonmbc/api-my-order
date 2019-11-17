@@ -1,0 +1,9 @@
+{
+    "name": "teste",
+    "price": 15,
+    "category_id": 1,
+    "ingredient_id": [
+        1,
+        2
+    ]
+}
