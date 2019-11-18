@@ -4,11 +4,8 @@
 const Model = use('Model')
 
 class Order extends Model {
-    items(){
+    items() {
         return this.hasMany('App/Models/Item')
-    }
-    product () {
-        return this.belongsToMany('App/Models/Product').pivotTable('Items')
     }
 }
 

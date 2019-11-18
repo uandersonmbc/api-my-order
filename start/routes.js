@@ -73,9 +73,8 @@ Route.group(() => {
 }).middleware(['auth', 'is:waiter']);
 
 
-Route.group(() => { 
-
-    Route.post('createorder', 'OrderController.store')
-    Route.resource('product', 'ProductController').apiOnly()
-
+Route.group(() => {
+    Route.post('item', 'OrderController.item')
+    Route.post('order', 'OrderController.store')
+    Route.put('order/:id', 'OrderController.changeStatus')
 }).middleware(['auth', 'is:customer']);
