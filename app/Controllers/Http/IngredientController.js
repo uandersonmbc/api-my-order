@@ -11,7 +11,8 @@ class IngredientController {
             page = 1;
         }
 
-        return await Ingredient.query().orderBy('id', 'desc').paginate(page);
+        // return await Ingredient.query().orderBy('id', 'desc').paginate(page);
+        return await Ingredient.all();
     }
 
     async store({ request, response }) {

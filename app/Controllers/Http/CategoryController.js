@@ -12,7 +12,8 @@ class CategoryController {
             page = 1;
         }
 
-        return await Category.query().whereNull('category_id').orderBy('id', 'desc').paginate(page);
+        // return await Category.query().whereNull('category_id').orderBy('id', 'desc').paginate(page);
+        return await Category.all();
     }
 
     async store({ request, response }) {

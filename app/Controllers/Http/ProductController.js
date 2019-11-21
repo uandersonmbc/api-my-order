@@ -38,7 +38,7 @@ class ProductController {
             product.ingredients().sync((req.ingredients) ? req.ingredients : [])
             return response.json(product);
         } catch (error) {
-
+            return response.json(error)
         }
     }
 
@@ -77,7 +77,7 @@ class ProductController {
             await product.load('ingredients');
             return response.json(product);
         } catch (error) {
-            return response.status.json({ message: 'Aconteceu um erro ao atualizar' });
+            return response.status(400).json({ message: 'Aconteceu um erro ao atualizar' });
         }
 
     }
