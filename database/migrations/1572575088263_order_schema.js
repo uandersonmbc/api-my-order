@@ -9,6 +9,8 @@ class OrderSchema extends Schema {
       table.increments()
       table.integer('user_id').notNullable()
       table.foreign('user_id').references('id').on('users').onDelete('cascade')
+      table.integer('cashier_id')
+      table.foreign('cashier_id').references('id').on('cashiers').onDelete('cascade')
       table.integer('status').defaultTo(0)
       table.timestamps()
     })
