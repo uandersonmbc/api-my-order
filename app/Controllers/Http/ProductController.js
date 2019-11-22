@@ -73,7 +73,7 @@ class ProductController {
             const req = request.all();
             product.merge(data)
             await product.save()
-            await product.ingredients().attach((req.ingredients) ? req.ingredients : []);
+            await product.ingredients().sync((req.ingredients) ? req.ingredients : []);
             await product.load('ingredients');
             return response.json(product);
         } catch (error) {

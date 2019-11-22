@@ -11,7 +11,6 @@ class SplitItemSchema extends Schema {
       table.foreign('individual_order_id').references('id').on('individual_orders').onDelete('cascade')
       table.integer('item_id').notNullable()
       table.foreign('item_id').references('id').on('items').onDelete('cascade')
-      table.timestamps()
     })
   }
 
