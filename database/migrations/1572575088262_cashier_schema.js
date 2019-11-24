@@ -4,16 +4,16 @@
 const Schema = use('Schema')
 
 class CashierSchema extends Schema {
-  up () {
+  up() {
     this.create('cashiers', (table) => {
       table.increments()
-      table.decimal('value', 10, 2).notNullable()
+      table.decimal('value', 10, 2).defaultTo(0)
       table.timestamp('open')
       table.timestamp('close')
     })
   }
 
-  down () {
+  down() {
     this.drop('cashiers')
   }
 }

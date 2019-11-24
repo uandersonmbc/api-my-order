@@ -51,6 +51,9 @@ Route.group(() => {
 
 Route.group(() => {
 
+    Route.post('cashier', 'CashierControler.openCashier');
+    Route.put('cashier', 'CashierControler.closedCashier');
+
     Route.resource('category', 'CategoryController').apiOnly()
 
     Route.post('addSubCategory', 'CategoryController.addSubCategory')
