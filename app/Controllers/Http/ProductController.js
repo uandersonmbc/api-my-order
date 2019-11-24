@@ -3,6 +3,7 @@
 const { validate } = use('Validator')
 
 const Product = use('App/Models/Product')
+const Category = use('App/Models/Category')
 
 class ProductController {
 
@@ -28,6 +29,12 @@ class ProductController {
 
         if (validation.fails()) {
             return response.status(400).json(validation.messages());
+        }
+
+        const category = await Category.find(data.category_id);
+
+        if (!category) {
+            return response.status(404).json({ message: 'Categoria não encontrada' })
         }
 
         try {

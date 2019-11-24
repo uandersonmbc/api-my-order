@@ -51,8 +51,12 @@ Route.group(() => {
 
 Route.group(() => {
 
-    Route.post('cashier', 'CashierControler.openCashier');
-    Route.put('cashier', 'CashierControler.closedCashier');
+    // Route.post('order', 'OrderController.store')
+
+
+    Route.get('cashier', 'CashierController.getCashier');
+    Route.post('cashier', 'CashierController.openCashier');
+    Route.put('cashier', 'CashierController.closedCashier');
 
     Route.resource('category', 'CategoryController').apiOnly()
 
@@ -77,7 +81,8 @@ Route.group(() => {
 
 
 Route.group(() => {
-    Route.post('item', 'OrderController.item')
+    Route.post('addItem', 'OrderController.addItem')
+    Route.post('deleteItem', 'OrderController.deleteItem')
     Route.post('order', 'OrderController.store')
     Route.put('order/:id', 'OrderController.changeStatus')
 }).middleware(['auth', 'is:customer']);

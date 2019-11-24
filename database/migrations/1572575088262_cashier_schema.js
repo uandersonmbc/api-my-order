@@ -8,8 +8,9 @@ class CashierSchema extends Schema {
     this.create('cashiers', (table) => {
       table.increments()
       table.decimal('value', 10, 2).defaultTo(0)
-      table.timestamp('open')
+      table.boolean('status').defaultTo(0)
       table.timestamp('close')
+      table.timestamps()
     })
   }
 

@@ -1,6 +1,9 @@
 'use strict'
 
+const { validate } = use('Validator')
+
 const Order = use('App/Models/Order')
+const Item = use('App/Models/Item')
 
 const DataProcessingService = use('App/Services/DataProcessingService');
 
@@ -41,14 +44,66 @@ class OrderController {
     async show({ params }) {
         const order = await Order.find(params.id)
         if (!order) {
-            return DataProcessingService.assemblyData(response, 'OR05', order);
+            return response.status(404).json({ message: 'Pedido não encontrado' });
         }
 
         return order.items().fetch();
     }
 
-    async item() {
-        return;
+    async addItem({ auth, request, response }) {
+        const user = await auth.getUser();
+
+        const data = request.only(['items']);
+
+        const rules = {
+            items: 'required',
+        }
+
+        const validation = await validate(request.all(), rules);
+
+        if (validation.fails()) {
+            return response.status(400).json(validation.messages());
+        }
+
+        const order = await user.order().where('status', 0).first()
+
+        if (!order) {
+            return response.status(404).json({ message: 'Pedido não encontrado' });
+        }
+
+        // return data
+
+        order.items().attach(data.items);
+
+        await order.load('items')
+        return order;
+    }
+
+    async deleteItem({ auth, request, response }) {
+        const user = await auth.getUser();
+
+        const data = request.only(['item']);
+
+        const rules = {
+            item: 'required'
+        }
+
+        const validation = await validate(request.all(), rules);
+
+        if (validation.fails()) {
+            return response.status(400).json(validation.messages());
+        }
+
+        const order = await user.order().where('status', 0).first()
+
+        if (!order) {
+            return response.status(404).json({ message: 'Pedido não encontrado' });
+        }
+
+        await order.items().detach([data.item])
+
+        await order.load('items')
+        return order;
     }
 }
 

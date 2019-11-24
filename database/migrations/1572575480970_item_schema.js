@@ -8,9 +8,9 @@ class ItemSchema extends Schema {
     this.create('items', (table) => {
       table.increments()
       table.integer('order_id').notNullable()
-      table.foreign('order_id').references('id').on('orders').onDelete('cascade')
+      table.foreign('order_id').references('id').on('orders')
       table.integer('product_id').notNullable()
-      table.foreign('product_id').references('id').on('products').onDelete('cascade')
+      table.foreign('product_id').references('id').on('products')
     })
   }
 
