@@ -54,7 +54,7 @@ class AuthController {
             return response.json(token);
 
         } catch (error) {
-            return response.status(400).json({ message: '' });
+            return response.status(400).json({ message: 'Nada', error });
         }
 
     }
