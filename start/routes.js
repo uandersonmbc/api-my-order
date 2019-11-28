@@ -51,9 +51,7 @@ Route.group(() => {
 
 Route.group(() => {
 
-    // Route.post('order', 'OrderController.store')
-
-
+    Route.get('orders', 'OrderController.index');
     Route.get('cashier', 'CashierController.getCashier');
     Route.post('cashier', 'CashierController.openCashier');
     Route.put('cashier', 'CashierController.closedCashier');

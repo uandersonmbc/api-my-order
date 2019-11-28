@@ -3,9 +3,6 @@
 const { validate } = use('Validator')
 
 const Order = use('App/Models/Order')
-const Item = use('App/Models/Item')
-
-const DataProcessingService = use('App/Services/DataProcessingService');
 
 class OrderController {
 
