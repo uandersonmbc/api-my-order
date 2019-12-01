@@ -4,6 +4,8 @@ const { validate } = use('Validator')
 
 const Order = use('App/Models/Order')
 
+const User = use('App/Models/User')
+
 class OrderController {
 
     async index({ request }) {
@@ -13,6 +15,31 @@ class OrderController {
         }
 
         return await Order.query().orderBy('id', 'desc').paginate(page);
+    }
+
+    async info({ response }) {
+        const data = {
+            orders: 0,
+            product: 0,
+            categories: 0,
+            ingredients: 0
+        }
+        try {
+            // const users = await User.all();
+            return response.json(data);
+        } catch (error) {
+            return response.status(500).json({ message: 'Não foi possível calcular valores' })
+        }
+    }
+
+
+    async users({ response }) {
+        try {
+            const users = await User.all();
+            return response.json(users);
+        } catch (error) {
+            return response.status(404).json({ message: 'nada' })
+        }
     }
 
     async store({ auth, response }) {

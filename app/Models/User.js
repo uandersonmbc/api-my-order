@@ -32,7 +32,7 @@ class User extends Model {
   }
 
   static get visible() {
-    return ['name', 'email', 'username']
+    return ['name', 'email', 'username', 'id']
   }
 
   getName(name) {

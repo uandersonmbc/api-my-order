@@ -3,6 +3,7 @@
 const { validate } = use('Validator')
 
 const Ingredient = use('App/Models/Ingredient')
+const ProductIngredient = use('App/Models/ProductIngredient')
 
 class IngredientController {
     async index({ request }) {
@@ -85,9 +86,22 @@ class IngredientController {
             return response.status(404).json({ message: 'Ingrediente não encontrado' });
         }
 
-        ingredient.delete()
+        try {
+            const teste = await ingredient.tablePivot().delete()
+            const ing = await ingredient.delete()
+            return response.json({
+                message: 'Deletado',
+                relationships: teste,
+                deleted: ing
+            });
+        } catch (error) {
+            return response.status(500).json({
+                message: 'Error',
+                error
+            });
+        }
 
-        return response.json(ingredient);
+
     }
 }
 

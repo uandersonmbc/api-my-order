@@ -7,8 +7,8 @@ class ProductSchema extends Schema {
   up() {
     this.create('products', (table) => {
       table.increments()
-      table.integer('category_id').notNullable()
-      table.foreign('category_id').references('id').on('categories').onDelete('cascade')
+      table.integer('category_id')
+      table.foreign('category_id').references('id').on('categories')
       table.string('name', 100).notNullable()
       table.decimal('price', 10, 2).notNullable()
       table.timestamps()

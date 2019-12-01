@@ -3,6 +3,7 @@
 const { validate } = use('Validator')
 
 const Category = use('App/Models/Category')
+const Product = use('App/Models/Product')
 
 class CategoryController {
 
@@ -111,14 +112,19 @@ class CategoryController {
         const category = await Category.find(params.id)
 
         if (!category) {
-            return response.status(400).json({ message: 'Essa categoria não existe :(' });
+            return response.status(404).json({ message: 'Essa categoria não existe :(' });
         }
 
         try {
-            await category.delete();
-            return response.json({ message: 'Deletado com sucesso' });
+            const teste = await Product.query().where('category_id', params.id).update({ category_id: null })
+            const cat = await category.delete();
+            return response.json({
+                message: 'Deletado com sucesso',
+                relationships: teste,
+                deleted: cat
+            });
         } catch (error) {
-            return response.status().json({ message: 'Acontecue um erro na hora de deleta a categoria' });
+            return response.status(500).json({ message: 'Acontecue um erro na hora de deleta a categoria', error });
         }
 
     }
