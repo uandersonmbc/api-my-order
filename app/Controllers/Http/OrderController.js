@@ -2,7 +2,12 @@
 
 const { validate } = use('Validator')
 
+const { broadcast } = require('../../utils/socket.utils');
+
 const Order = use('App/Models/Order')
+const Product = use('App/Models/Product')
+const Category = use('App/Models/Category')
+const Ingredient = use('App/Models/Ingredient')
 
 const User = use('App/Models/User')
 
@@ -17,15 +22,20 @@ class OrderController {
         return await Order.query().orderBy('id', 'desc').paginate(page);
     }
 
-    async info({ response }) {
-        const data = {
-            orders: 0,
-            product: 0,
-            categories: 0,
-            ingredients: 0
-        }
+    async info({ socket, response }) {
         try {
-            // const users = await User.all();
+            const total_ord = await Order.query().where('status', 0).count();
+            const total_pro = await Product.query().count();
+            const total_cat = await Category.query().count();
+            const total_ing = await Ingredient.query().count();
+
+            const data = {
+                orders: parseInt(total_ord[0]['count']),
+                product: parseInt(total_pro[0]['count']),
+                categories: parseInt(total_cat[0]['count']),
+                ingredients: parseInt(total_ing[0]['count'])
+            }
+
             return response.json(data);
         } catch (error) {
             return response.status(500).json({ message: 'Não foi possível calcular valores' })
@@ -54,6 +64,8 @@ class OrderController {
         }
         const order = await user.order().where('status', 0).first()
         await order.load('items')
+        broadcast(0, 'orde:newOrde', order);
+
         return response.json(order);
     }
 
