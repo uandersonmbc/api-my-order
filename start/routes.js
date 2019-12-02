@@ -52,6 +52,7 @@ Route.group(() => {
 Route.group(() => {
 
     Route.get('orders', 'OrderController.index');
+    Route.get('order/:id', 'OrderController.show');
     Route.get('users', 'OrderController.users');
     Route.get('info', 'OrderController.info');
 
@@ -66,10 +67,6 @@ Route.group(() => {
     Route.resource('product', 'ProductController').apiOnly()
 
     Route.resource('ingredient', 'IngredientController').apiOnly()
-
-    Route.post('changestatus/:id', 'OrderController.changeStatus')
-    Route.get('order', 'OrderController.index')
-    Route.get('showorder/:id', 'OrderController.show')
 
 }).middleware(['auth', 'is:manager']);
 

@@ -69,7 +69,7 @@ class OrderController {
         return response.json(order);
     }
 
-    async changeStatus({ params, request }) {
+    async changeStatus({ params, request, response }) {
         const order = await Order.find(params.id);
         const data = request.only(['status'])
         order.merge(data);
@@ -77,13 +77,14 @@ class OrderController {
         return order;
     }
 
-    async show({ params }) {
+    async show({ params, response }) {
         const order = await Order.find(params.id)
         if (!order) {
             return response.status(404).json({ message: 'Pedido não encontrado' });
         }
 
-        return order.items().fetch();
+        const items = await order.items().fetch();
+        return response.json(items);
     }
 
     async addItem({ auth, request, response }) {
