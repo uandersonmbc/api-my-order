@@ -22,7 +22,7 @@ class OrderController {
         return await Order.query().orderBy('id', 'desc').paginate(page);
     }
 
-    async info({ socket, response }) {
+    async info({ response }) {
         try {
             const total_ord = await Order.query().where('status', 0).count();
             const total_pro = await Product.query().count();
@@ -42,6 +42,17 @@ class OrderController {
         }
     }
 
+    async myorder({ auth, response }) {
+        const user = await auth.getUser();
+        const userOrder = await user.order().where('status', 0).count('id');
+
+        if (userOrder[0].count == 0) {
+            return response.json({})
+        }
+        const order = await user.order().where('status', 0).first()
+        await order.load('items')
+        return response.json(order);
+    }
 
     async users({ response }) {
         try {
@@ -54,12 +65,13 @@ class OrderController {
 
     async store({ auth, response }) {
         const user = await auth.getUser();
-        const userOrder = await user.order().where('status', '<', 1).count('id');
+        const userOrder = await user.order().where('status', 0).count('id');
 
         if (userOrder[0].count == 0) {
             const data = { user_id: user.id };
             const order = await Order.create(data);
             await order.load('items')
+            broadcast(0, 'orde:newOrde', order);
             return order
         }
         const order = await user.order().where('status', 0).first()
@@ -69,12 +81,21 @@ class OrderController {
         return response.json(order);
     }
 
-    async changeStatus({ params, request, response }) {
-        const order = await Order.find(params.id);
-        const data = request.only(['status'])
-        order.merge(data);
+    async changeStatus({ auth, response }) {
+
+        const user = await auth.getUser();
+        const userOrder = await user.order().where('status', 0).count('id');
+
+        if (userOrder[0].count == 0) {
+            broadcast(0, 'orde:newOrde', {});
+            return response.json({})
+        }
+        const order = await user.order().where('status', 0).first()
+
+        order.merge({ status: 1 });
         await order.save();
-        return order;
+        broadcast(0, 'orde:newOrde', order);
+        return response.json(order);
     }
 
     async show({ params, response }) {
@@ -119,10 +140,10 @@ class OrderController {
     async deleteItem({ auth, request, response }) {
         const user = await auth.getUser();
 
-        const data = request.only(['item']);
+        const data = request.only(['items']);
 
         const rules = {
-            item: 'required'
+            items: 'required'
         }
 
         const validation = await validate(request.all(), rules);
@@ -137,7 +158,7 @@ class OrderController {
             return response.status(404).json({ message: 'Pedido não encontrado' });
         }
 
-        await order.items().detach([data.item])
+        await order.items().detach(data.items)
 
         await order.load('items')
         return order;

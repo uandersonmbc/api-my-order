@@ -16,6 +16,10 @@ class ProductController {
         return await Product.query().orderBy('id', 'desc').paginate(page);
     }
 
+    async cli({ request }) {
+        return await Product.all();
+    }
+
     async store({ request, response }) {
         const data = request.only(['name', 'price', 'category_id']);
 
@@ -63,7 +67,7 @@ class ProductController {
         const product = await Product.find(params.id)
 
         const rules = {
-            name: 'required|unique:categories,name'
+            name: 'required'
         }
 
         const validation = await validate(request.all(), rules);

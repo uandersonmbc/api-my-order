@@ -82,5 +82,8 @@ Route.group(() => {
     Route.post('addItem', 'OrderController.addItem')
     Route.post('deleteItem', 'OrderController.deleteItem')
     Route.post('order', 'OrderController.store')
-    Route.put('order/:id', 'OrderController.changeStatus')
+    Route.get('myorder', 'OrderController.myorder')
+    Route.put('myorder', 'OrderController.changeStatus')
+    Route.get('products', 'ProductController.cli')
+
 }).middleware(['auth', 'is:customer']);
